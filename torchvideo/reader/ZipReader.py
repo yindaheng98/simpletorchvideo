@@ -20,13 +20,19 @@ class ZipImageReader:
     def valid(self) -> bool:
         return zipfile.is_zipfile(self.path)
 
+    @staticmethod
+    def _format_path(path):
+        path = path.replace("\\", "/")
+        path = path[1:] if path[0] == "/" else path
+        path = path[0:-1] if path[-1] == "/" else path
+        return path
+
     def read_file(self, path: str):
         """Read a file from a zip.
         :param path: path of the file in zip
         :returns buffer-like file content
         """
-        path = path.replace("\\", "/")
-        path = path[1:] if path[0] == "/" else path
+        path = self._format_path(path)
         try:
             img_bytes = self.file.read(path)
         except zipfile.BadZipFile:
@@ -36,14 +42,19 @@ class ZipImageReader:
             img_bytes = self.file.read(path)
         return cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
 
+    def _prepare_zip(self):
+        if self.file is None:
+            self.file = zipfile.ZipFile(self.path, "r")
+
     def list_file(self, path: str) -> [str]:
         """List a dir zip.
         :param path: path of the dir in zip
         :returns paths of the files in the dir, include sub dir
         """
-        path = path.replace("\\", "/")
-        path = path[1:] if path[0] == "/" else path
-        path = path[0:-1] if path[-1] == "/" else path
-        if self.file is None:
-            self.file = zipfile.ZipFile(self.path, "r")
+        path = self._format_path(path)
+        self._prepare_zip()
         return sorted(list(filter(lambda f: f[-1] != "/" and f.startswith(path), self.file.namelist())))
+
+    def getinfo(self, path: str):
+        self._prepare_zip()
+        return self.file.getinfo(path)
