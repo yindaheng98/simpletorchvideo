@@ -16,10 +16,10 @@ package_dir = {
 
 setup(
     name='simpletorchvideo',
-    version='0.1.0',
+    version='0.1.1',
     author='yindaheng98',
     author_email='yindaheng98@163.com',
-    url='https://github.com/yindaheng98/simpltorchvideo',
+    url='https://github.com/yindaheng98/simpletorchvideo',
     description=u'Some useful video dataset in pytorch',
     long_description=long_description,
     long_description_content_type="text/markdown",
