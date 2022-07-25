@@ -27,7 +27,7 @@ class ZipImageReader:
         path = path[0:-1] if path[-1] == "/" else path
         return path
 
-    def read_file(self, path: str):
+    def read_image(self, path: str):
         """Read a file from a zip.
         :param path: path of the file in zip
         :returns buffer-like file content
@@ -46,7 +46,7 @@ class ZipImageReader:
         if self.file is None:
             self.file = zipfile.ZipFile(self.path, "r")
 
-    def list_file(self, path: str) -> [str]:
+    def list_images(self, path: str) -> [str]:
         """List a dir zip.
         :param path: path of the dir in zip
         :returns paths of the files in the dir, include sub dir
