@@ -1,6 +1,6 @@
 import random
 from pprint import pprint
-from torchvideo.reader import FFmpegReader
+from torchvideo.ffmpeg import FFmpegReader
 
 reader = FFmpegReader(["~/Videos/4K-small.mkv", "~/Videos/720p-small.mkv"])
 pprint(reader.list_videos())

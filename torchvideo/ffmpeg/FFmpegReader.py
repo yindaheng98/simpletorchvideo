@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from .util import VideoReader
+from torchvideo.reader.util import VideoReader
 from .ffmpeg import read_video_meta, read_video_sequence
 
 
