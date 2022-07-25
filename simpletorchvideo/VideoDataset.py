@@ -29,13 +29,10 @@ class VideoDataset(Dataset):
         frame_index = index * self.num_frames
 
         # Get frame list
-        frames = []
         for i in range(len(self.video_list)):
             if 0 <= frame_index <= len(self.video_list[i]) - self.num_frames:
                 image_paths = self.video_list[i][frame_index:frame_index + self.num_frames]
                 logger.debug("Reading images: %s" % image_paths)
-                frames.extend(self.reader.read_images(image_paths))
-                break
+                return self.reader.read_images(image_paths)
             else:
                 frame_index = frame_index - (len(self.video_list[i]) - len(self.video_list[i]) % self.num_frames)
-        return frames
