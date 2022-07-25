@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from torchvideo.vimeo.VimeoDirReader import VimeoDirReader
+from simpletorchvideo.vimeo.VimeoDirReader import VimeoDirReader
 
 inc = [
     '00001/0001',
@@ -10,7 +10,7 @@ inc = [
     '00002/0004',
 
 ]
-reader = VimeoDirReader("D:\\Documents\\MyPrograms\\vimeo_septuplet", include_list=inc)
+reader = VimeoDirReader("~/dataset/vimeo_septuplet", include_list=inc)
 l = reader.list_videos()
 pprint(l)
 print(reader.read_images(l[0][0:3]))

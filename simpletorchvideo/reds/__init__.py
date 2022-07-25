@@ -6,7 +6,7 @@ def REDSReader(path: str, root: str):
     Construct a vimeo dataset.
     :param path: path to REDS dataset zip file.
     :param root: path to REDS dataset file in zip. its sub dir should be <video index>/<frame index>.png. e.g. "test/test_sharp_bicubic/X4" in test_sharp_bicubic.zip
-    :return: a torchvideo.reader.VideoReader
+    :return: a simpletorchvideo.reader.VideoReader
     """
     reader = None
     try:

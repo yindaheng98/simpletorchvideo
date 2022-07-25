@@ -1,8 +1,8 @@
 import random
 from pprint import pprint
 
-from torchvideo.reds.REDSZipReader import REDSZipReader
-from torchvideo import VideoDataset
+from simpletorchvideo.reds.REDSZipReader import REDSZipReader
+from simpletorchvideo import VideoDataset
 
 reader = REDSZipReader("~/dataset/test_sharp_bicubic.zip", "test/test_sharp_bicubic/X4")
 l = reader.list_videos()

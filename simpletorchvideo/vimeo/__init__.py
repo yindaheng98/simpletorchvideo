@@ -9,7 +9,7 @@ def VimeoReader(path: str, include_list: [str]):
     if a vimeo_septuplet.zip, structure in zip should like vimeo_septuplet/sequences/<video index>/<slice index>/<image name>.png
     if a vimeo_septuplet directory structure in dir should  like sequences/<video index>/<slice index>/<image name>.png
     :param include_list: include of vimeo dataset. format like content in vimeo_septuplet/sep_trainlist.txt, <video index>/<slice index>
-    :return: a torchvideo.reader.VideoReader
+    :return: a simpletorchvideo.reader.VideoReader
     """
     reader = None
     try:

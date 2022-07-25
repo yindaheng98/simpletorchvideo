@@ -1,5 +1,5 @@
 import numpy as np
-from torchvideo.reader import VideoReader, ZipImageReader
+from simpletorchvideo.reader import VideoReader, ZipImageReader
 from .util import *
 
 
