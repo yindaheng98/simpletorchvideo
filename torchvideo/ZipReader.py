@@ -1,11 +1,13 @@
 import logging
 import os
 import zipfile
+import cv2
+import numpy as np
 
 logger = logging.getLogger('base')
 
 
-class ZipReader:
+class ZipImageReader:
     def __init__(self, path: str):
         """Read data from zip
         :param path: path of the zip file
@@ -26,12 +28,13 @@ class ZipReader:
         path = path.replace("\\", "/")
         path = path[1:] if path[0] == "/" else path
         try:
-            return self.file.read(path)
+            img_bytes = self.file.read(path)
         except zipfile.BadZipFile:
             self.file.close()
             logger.debug("Reopen zip file: %s" % self.path)
             self.file = zipfile.ZipFile(self.path, "r")
-            return self.file.read(path)
+            img_bytes = self.file.read(path)
+        return cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
 
     def list_file(self, path: str) -> [str]:
         """List a dir zip.
