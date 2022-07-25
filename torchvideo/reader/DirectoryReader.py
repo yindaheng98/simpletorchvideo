@@ -40,3 +40,6 @@ class DirectoryImageReader:
                 # if filetype.is_image(abspath): # should check, but cost too much time
                 images.append(os.path.relpath(abspath, root))
         return images
+
+    def is_dir(self, path: str):
+        return os.path.isdir(os.path.join(self.root, path))
