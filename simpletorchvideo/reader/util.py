@@ -36,5 +36,4 @@ class VideoReaderList(VideoReader):
         return self.readers[0].list_videos()
 
     def read_images(self, paths: [str]) -> [(np.ndarray,)]:
-        images = list(zip(*(reader.read_images(paths) for reader in self.readers)))
-        return images
+        return list(reader.read_images(paths) for reader in self.readers)
