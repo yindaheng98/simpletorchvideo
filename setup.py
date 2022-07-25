@@ -7,16 +7,16 @@ with open("README.md", "r", encoding='utf8') as fh:
     long_description = fh.read()
 
 package_dir = {
-    'simpltorchvideo': 'simpltorchvideo',
-    'simpltorchvideo.reader': 'simpltorchvideo/reader',
-    'simpltorchvideo.ffmpeg': 'simpltorchvideo/ffmpeg',
-    'simpltorchvideo.reds': 'simpltorchvideo/reds',
-    'simpltorchvideo.vimeo': 'simpltorchvideo/vimeo',
+    'simpletorchvideo': 'simpletorchvideo',
+    'simpletorchvideo.reader': 'simpletorchvideo/reader',
+    'simpletorchvideo.ffmpeg': 'simpletorchvideo/ffmpeg',
+    'simpletorchvideo.reds': 'simpletorchvideo/reds',
+    'simpletorchvideo.vimeo': 'simpletorchvideo/vimeo',
 }
 
 setup(
-    name='simpltorchvideo',
-    version='0.0.1',
+    name='simpletorchvideo',
+    version='0.0.2',
     author='yindaheng98',
     author_email='yindaheng98@163.com',
     url='https://github.com/yindaheng98/simpltorchvideo',
@@ -29,5 +29,10 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+    ],
+    install_requires=[
+        'torch>=1.12.0',
+        'opencv-python>=4.6.0.66',
+        'ffmpeg-python>=0.2.0',
     ],
 )
