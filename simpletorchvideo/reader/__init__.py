@@ -1,3 +1,3 @@
 from .ZipReader import ZipImageReader
 from .DirectoryReader import DirectoryImageReader
-from .util import VideoReader
+from .util import VideoReader, VideoReaderList
