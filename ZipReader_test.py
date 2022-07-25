@@ -1,6 +1,6 @@
 import random
 from pprint import pprint
-from torchvideo.ZipReader import ZipImageReader
+from torchvideo.reader import ZipImageReader
 
 reader = ZipImageReader("~/dataset/Vid4.zip")
 l = reader.list_file("GT")

@@ -1,6 +1,6 @@
 import random
 from pprint import pprint
-from torchvideo.DirectoryReader import DirectoryImageReader
+from torchvideo.reader import DirectoryImageReader
 
 reader = DirectoryImageReader("~/vimeo_septuplet")
 l = reader.list_images("")
