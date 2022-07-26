@@ -6,6 +6,8 @@ import numpy as np
 
 logger = logging.getLogger('base')
 
+global_zipfiles = {}
+
 
 class ZipImageReader:
     def __init__(self, path: str):
@@ -15,7 +17,6 @@ class ZipImageReader:
         super().__init__()
         self.path = os.path.expanduser(path)
         assert self.valid(), "Not a valid ZipReader"
-        self.file = None
 
     def valid(self) -> bool:
         return zipfile.is_zipfile(self.path)
@@ -33,18 +34,19 @@ class ZipImageReader:
         :returns buffer-like file content
         """
         path = self._format_path(path)
+        self._prepare_zip()
         try:
-            img_bytes = self.file.read(path)
+            img_bytes = global_zipfiles[self.path].read(path)
         except zipfile.BadZipFile:
-            self.file.close()
+            global_zipfiles[self.path].close()
             logger.debug("Reopen zip file: %s" % self.path)
-            self.file = zipfile.ZipFile(self.path, "r")
-            img_bytes = self.file.read(path)
+            global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")
+            img_bytes = global_zipfiles[self.path].read(path)
         return cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
 
     def _prepare_zip(self):
-        if self.file is None:
-            self.file = zipfile.ZipFile(self.path, "r")
+        if self.path not in global_zipfiles or global_zipfiles[self.path] is None:
+            global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")
 
     def list_images(self, path: str) -> [str]:
         """List a dir zip.
@@ -53,8 +55,10 @@ class ZipImageReader:
         """
         path = self._format_path(path)
         self._prepare_zip()
-        return sorted(list(filter(lambda f: f[-1] != "/" and f.startswith(path), self.file.namelist())))
+        return sorted(list(
+            filter(lambda f: f[-1] != "/" and f.startswith(path), global_zipfiles[self.path].namelist())
+        ))
 
     def getinfo(self, path: str):
         self._prepare_zip()
-        return self.file.getinfo(path)
+        return global_zipfiles[self.path].getinfo(path)
