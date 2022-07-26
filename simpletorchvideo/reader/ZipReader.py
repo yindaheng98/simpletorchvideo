@@ -17,6 +17,7 @@ class ZipImageReader:
         super().__init__()
         self.path = os.path.expanduser(path)
         assert self.valid(), "Not a valid ZipReader"
+        self.dir_struct = None
 
     def valid(self) -> bool:
         return zipfile.is_zipfile(self.path)
@@ -48,6 +49,25 @@ class ZipImageReader:
         if self.path not in global_zipfiles or global_zipfiles[self.path] is None:
             global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")
 
+    def _prepare_dir_struct(self):
+        self._prepare_zip()
+        if self.dir_struct is not None:
+            return
+        self.dir_struct = {}
+        for path in global_zipfiles[self.path].namelist():
+            if path[-1] == '/':
+                continue
+            current = self.dir_struct
+            split = path.split('/')
+            for name in split[0:-1]:
+                if name in current:
+                    current = current[name]
+                else:
+                    current[name] = {}
+                    current = current[name]
+            name = split[-1]
+            current[name] = None
+
     def list_images(self, path: str) -> [str]:
         """List a dir zip.
         :param path: path of the dir in zip
@@ -55,9 +75,25 @@ class ZipImageReader:
         """
         path = self._format_path(path)
         self._prepare_zip()
-        return sorted(list(
-            filter(lambda f: f[-1] != "/" and f.startswith(path), global_zipfiles[self.path].namelist())
-        ))
+        self._prepare_dir_struct()
+        current = self.dir_struct
+        for name in path.split('/'):
+            if name in current:
+                current = current[name]
+            else:
+                return []
+
+        def join(root: str, data):
+            if type(data) is dict:
+                for k, v in data.items():
+                    if v is None:
+                        yield root + "/" + k
+                    else:
+                        yield from join(root + "/" + k, v)
+            else:
+                yield root + "/" + data
+
+        return sorted(list(join(path, current)))
 
     def getinfo(self, path: str):
         self._prepare_zip()
