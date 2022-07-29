@@ -119,14 +119,14 @@ class ZipImageReader:
                 cv2.cvtColor(img, cv2.COLOR_BGR2RGB, img)
             return img
 
-    def _pillow2array(img, flag='color', channel_order='bgr'):
+    def _pillow2array(img, flag='unchanged', channel_order='bgr'):
         """Convert a pillow image to numpy array.
 
         Args:
             img (:obj:`PIL.Image.Image`): The image loaded using PIL
             flag (str): Flags specifying the color type of a loaded image,
                 candidates are 'color', 'grayscale' and 'unchanged'.
-                Default to 'color'.
+                Default to 'unchanged'.
             channel_order (str): The channel order of the output image array,
                 candidates are 'bgr' and 'rgb'. Default to 'bgr'.
 
