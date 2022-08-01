@@ -12,11 +12,12 @@ package_dir = {
     'simpletorchvideo.ffmpeg': 'simpletorchvideo/ffmpeg',
     'simpletorchvideo.reds': 'simpletorchvideo/reds',
     'simpletorchvideo.vimeo': 'simpletorchvideo/vimeo',
+    'simpletorchvideo.vid4': 'simpletorchvideo/vid4',
 }
 
 setup(
     name='simpletorchvideo',
-    version='0.2.5',
+    version='0.2.6',
     author='yindaheng98',
     author_email='yindaheng98@163.com',
     url='https://github.com/yindaheng98/simpletorchvideo',
