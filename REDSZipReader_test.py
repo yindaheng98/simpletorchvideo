@@ -2,10 +2,10 @@ import random
 import cv2
 from pprint import pprint
 
-from simpletorchvideo.reds.REDSZipReader import REDSZipReader
+from simpletorchvideo.reds.REDSZipReader import REDSZipReader_for_val_LR
 from simpletorchvideo import VideoDataset
 
-reader = REDSZipReader("~/dataset/test_sharp_bicubic.zip", "test/test_sharp_bicubic/X4")
+reader = REDSZipReader_for_val_LR("~/dataset/val_sharp_bicubic.zip")
 l = reader.list_videos()
 pprint(l)
 print(reader.read_images(l[0][0:3]))
