@@ -34,8 +34,14 @@ class VimeoZipReader(VideoReader):
         path = path[0:-1] if path[-1] == "/" else path
         return path
 
-    def read_images(self, paths: [str]) -> [np.ndarray]:
-        return [self.reader.read_image('vimeo_septuplet/sequences/' + self._format_path(path)) for path in paths]
+    def read_images(self, paths: (str, [str]), flag='unchanged', channel_order='bgr', backend=None) -> [np.ndarray]:
+        assert isinstance(paths, (str, list)), 'Paths must be a list or str type!'
+        if isinstance(paths, str):
+            paths = [paths]
+        return [
+            self.reader.read_image('vimeo_septuplet/sequences/' + self._format_path(path), flag, channel_order, backend)
+            for path in paths
+        ]
 
     def list_videos(self) -> [[str]]:
         paths = []

@@ -2,9 +2,9 @@ import logging
 import os
 import zipfile
 import cv2
-from cv2 import (IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_IGNORE_ORIENTATION,
-                 IMREAD_UNCHANGED)
+from cv2 import (IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_IGNORE_ORIENTATION, IMREAD_UNCHANGED)
 import numpy as np
+import io
 
 jpeg = None
 supported_backends = ['cv2', 'pillow', 'tifffile']
@@ -14,7 +14,7 @@ imread_flags = {
     'unchanged': IMREAD_UNCHANGED,
     'color_ignore_orientation': IMREAD_IGNORE_ORIENTATION | IMREAD_COLOR,
     'grayscale_ignore_orientation':
-    IMREAD_IGNORE_ORIENTATION | IMREAD_GRAYSCALE
+        IMREAD_IGNORE_ORIENTATION | IMREAD_GRAYSCALE
 }
 imread_backend = 'cv2'
 try:
@@ -52,26 +52,10 @@ class ZipImageReader:
         path = path[0:-1] if path[-1] == "/" else path
         return path
 
-    def read_image(self, path: str):
-        """Read a file from a zip.
-        :param path: path of the file in zip
-        :returns buffer-like file content
-        """
-        path = self._format_path(path)
-        self._prepare_zip()
-        try:
-            img_bytes = global_zipfiles[self.path].read(path)
-        except zipfile.BadZipFile:
-            global_zipfiles[self.path].close()
-            logger.debug("Reopen zip file: %s" % self.path)
-            global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")
-            img_bytes = global_zipfiles[self.path].read(path)
-        return cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
-
-    def read_image_custom(self, path: str,flag='unchanged', channel_order='bgr', backend=None):
+    def read_image(self, path: str, flag='unchanged', channel_order='bgr', backend=None):
         """Read a file from a zip, and custom the image, ref from mmcv.imfrombytes
         Args:
-            path of the file in zip
+            path (str): path of the file in zip
             flag (str): Loading flag for images. Default: 'unchanged'.
             channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
                 Default: 'bgr'.
@@ -90,18 +74,17 @@ class ZipImageReader:
             logger.debug("Reopen zip file: %s" % self.path)
             global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")
             img_bytes = global_zipfiles[self.path].read(path)
+        return self._image_from_bytes(img_bytes,
+                                      flag=flag,
+                                      channel_order=channel_order,
+                                      backend=backend)
 
-        return self._customimage_from_bytes(img_bytes,
-                flag=flag,
-                channel_order=channel_order,
-                backend=backend)
-
-    def _customimage_from_bytes(self,img_bytes,flag,channel_order,backend):
+    def _image_from_bytes(self, img_bytes, flag, channel_order, backend):
         if backend is None:
             backend = imread_backend
         if backend not in supported_backends:
             raise ValueError(f'backend: {backend} is not supported. Supported '
-            "backends are 'cv2', 'pillow', 'tifffile'")
+                             "backends are 'cv2', 'pillow', 'tifffile'")
         if backend == 'pillow':
             with io.BytesIO(img_bytes) as buff:
                 img = Image.open(buff)
@@ -119,6 +102,7 @@ class ZipImageReader:
                 cv2.cvtColor(img, cv2.COLOR_BGR2RGB, img)
             return img
 
+    @staticmethod
     def _pillow2array(img, flag='unchanged', channel_order='bgr'):
         """Convert a pillow image to numpy array.
 
@@ -172,6 +156,7 @@ class ZipImageReader:
                     f'"color_ignore_orientation" or "grayscale_ignore_orientation"'
                     f' but got {flag}')
         return array
+
     def _prepare_zip(self):
         if self.path not in global_zipfiles or global_zipfiles[self.path] is None:
             global_zipfiles[self.path] = zipfile.ZipFile(self.path, "r")

@@ -1,5 +1,5 @@
 from pprint import pprint
-
+import cv2
 from simpletorchvideo.vimeo.VimeoZipReader import VimeoZipReader
 
 inc = [
@@ -24,3 +24,8 @@ print(reader.read_images(l[0][0:3]))
 print(reader.read_images(l[0][-3:]))
 print(reader.read_images(l[-1][0:3]))
 print(reader.read_images(l[-1][-3:]))
+cv2.imwrite("dataset/default.png", reader.read_images(l[-1][-3:])[0])
+cv2.imwrite("dataset/flag_color.png", reader.read_images(l[-1][-3:], flag='color')[0])  # 正常
+cv2.imwrite("dataset/channel_order_rgb.png", reader.read_images(l[-1][-3:], channel_order='rgb')[0])  # 正常
+cv2.imwrite("dataset/flag_color_channel_order_rgb.png",
+            reader.read_images(l[-1][-3:], flag='color', channel_order='rgb')[0])  # 不正常

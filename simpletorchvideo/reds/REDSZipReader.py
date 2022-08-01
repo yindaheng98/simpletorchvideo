@@ -31,19 +31,14 @@ class REDSZipReader(VideoReader):
         path = path[0:-1] if path[-1] == "/" else path
         return path
 
-    def read_images(self, paths:(str,list)) -> [np.ndarray]:
-        assert isinstance(paths, (str,list)), 'Paths must be a list or str type!'
-        if isinstance(paths,str):
-            return [self.reader.read_image(self.root + self._format_path(paths))]
-        elif isinstance(paths,list):
-            return [self.reader.read_image(self.root + self._format_path(path)) for path in paths]
-
-    def read_images_custom(self, paths: [str],flag='unchanged', channel_order='bgr', backend=None) -> [np.ndarray]:
-        assert isinstance(paths, (str,list)), 'Paths must be a list or str type!'
-        if isinstance(paths,str):
-            return [self.reader.read_image_custom(self.root + self._format_path(paths),flag,channel_order,backend)]
-        elif isinstance(paths,list):
-            return [self.reader.read_image_custom(self.root + self._format_path(path),flag,channel_order,backend) for path in paths]
+    def read_images(self, paths: (str, [str]), flag='unchanged', channel_order='bgr', backend=None) -> [np.ndarray]:
+        assert isinstance(paths, (str, list)), 'Paths must be a list or str type!'
+        if isinstance(paths, str):
+            paths = [paths]
+        return [
+            self.reader.read_image(self.root + self._format_path(path), flag, channel_order, backend)
+            for path in paths
+        ]
 
     def list_videos(self) -> [[str]]:
         return parse_video_list_from_image_list([p.replace(self.root, '') for p in self.reader.list_images(self.root)])
