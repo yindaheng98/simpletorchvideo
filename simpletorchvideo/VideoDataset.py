@@ -17,15 +17,27 @@ class VideoDataset(Dataset):
     def __init__(self, video_reader: VideoReader, num_frames=7):
         super(VideoDataset, self).__init__()
         self.reader = video_reader
-        self.num_frames = num_frames
-
         self.video_list = self.reader.list_videos()
-        self.len = sum([len(video) // num_frames for video in self.video_list])
+        if isinstance(num_frames, int):
+            self.num_frames = num_frames
+            self.len = sum([len(video) // num_frames for video in self.video_list])
+        else:
+            self.num_frames = None
+            self.len = len(self.video_list)
 
     def __len__(self):
         return self.len
 
     def __getitem__(self, index):
+        if isinstance(self.num_frames, int):
+            return self.get_clip(index)
+        else:
+            return self.get_video(index)
+
+    def get_video(self, index):
+        return self.reader.read_images(self.video_list[index])
+
+    def get_clip(self, index):
         frame_index = index * self.num_frames
 
         # Get frame list

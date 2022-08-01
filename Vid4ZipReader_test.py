@@ -17,9 +17,9 @@ cv2.imwrite("dataset/flag_color.png", reader.read_images(l[-1][-3:], flag='color
 cv2.imwrite("dataset/channel_order_rgb.png", reader.read_images(l[-1][-3:], channel_order='rgb')[0])  # 正常
 cv2.imwrite("dataset/flag_color_channel_order_rgb.png",
             reader.read_images(l[-1][-3:], flag='color', channel_order='rgb')[0])  # 不正常
-dataset = VideoDataset(reader)
+dataset = VideoDataset(reader, num_frames=None)
 for _ in range(3):
-    data = dataset[random.randint(0, len(dataset))]
+    data = dataset[random.randint(0, len(dataset) - 1)]
     print(data, len(data), data[0].shape, data[-1].shape)
 data = dataset[0]
 print(len(data), data[0].shape, data[-1].shape)
