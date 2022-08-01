@@ -1,4 +1,6 @@
 from .REDSZipReader import REDSZipReader
+from .REDSZipReader import REDSZipReader_for_train_LR, REDSZipReader_for_train_HR
+from .REDSZipReader import REDSZipReader_for_val_LR, REDSZipReader_for_val_HR
 
 
 def REDSReader(path: str, root: str):
