@@ -35,6 +35,7 @@ class VideoDataset(Dataset):
             return self.get_video(index)
 
     def get_video(self, index):
+        logger.debug("Reading video: %s" % self.video_list[index])
         return self.reader.read_images(self.video_list[index])
 
     def get_clip(self, index):
