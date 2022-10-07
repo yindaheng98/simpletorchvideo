@@ -5,13 +5,14 @@ from .ffmpeg import read_video_meta, read_video_sequence
 
 
 class FFmpegReader(VideoReader):
-    def __init__(self, videos: [str]):
+    def __init__(self, videos: [str], pix_fmt='bgr24'):
         """Read data with ffmpeg
         :param videos: paths of the videos
         """
         super().__init__()
         self.paths = sorted(os.path.expanduser(path) for path in videos)
         assert self.valid(), "Hot a valid FFmpegReader"
+        self.pix_fmt = pix_fmt
 
     def valid(self) -> bool:
         try:
@@ -48,7 +49,7 @@ class FFmpegReader(VideoReader):
             stop = pos
         width, height, n_frames = read_video_meta(video_path)
         assert n_frames > stop, "max frame num is %d!" % n_frames
-        frames = read_video_sequence(video_path, start, stop + 1, width, height)
+        frames = read_video_sequence(video_path, start, stop + 1, width, height, self.pix_fmt)
         return [frames[i, :, :] for i in range(frames.shape[0])]
 
     def list_videos(self) -> [[str]]:

@@ -7,13 +7,13 @@ import numpy as np
 loglevel = 'error'
 
 
-def read_video_sequence(path: str, start: int, stop: int, width: int, height: int):
+def read_video_sequence(path: str, start: int, stop: int, width: int, height: int, pix_fmt='bgr24'):
     path = os.path.expanduser(path)
     process = (ffmpeg
                .input(path, loglevel=loglevel)
                .trim(start_frame=start, end_frame=stop)
                .setpts('PTS-STARTPTS')
-               .output('pipe:', format='rawvideo', pix_fmt='rgb24')
+               .output('pipe:', format='rawvideo', pix_fmt=pix_fmt)
                .run_async(pipe_stdout=True, pipe_stderr=False))
     out, err = process.communicate()
     if err:

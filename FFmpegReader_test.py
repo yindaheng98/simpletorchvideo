@@ -2,8 +2,11 @@ import random
 from pprint import pprint
 from simpletorchvideo.ffmpeg import FFmpegReader
 from simpletorchvideo.VideoDataset import VideoDataset
+import cv2
 
-reader = FFmpegReader(["~/Videos/4K-small.mkv", "~/Videos/720p-small.mkv"])
+pix_fmt = 'rgb24'
+reader = FFmpegReader(["~/dataset/youtube/Gaming_1080P-29b1_orig.mp4", "~/dataset/youtube/Gaming_1080P-223e_orig.mp4"],
+                      pix_fmt=pix_fmt)
 pprint(reader.list_videos())
 for frames in reader.list_videos():
     f0 = reader.read_images(frames[0:3])
@@ -16,6 +19,9 @@ for frames in reader.list_videos():
     print(f0[0].shape)
     print(f1[0].shape)
     print(fr[0].shape)
+    cv2.imwrite(f"dataset/video_f0_{pix_fmt}.png", f0[0])
+    cv2.imwrite(f"dataset/video_f1_{pix_fmt}.png", f1[0])
+    cv2.imwrite(f"dataset/video_fr_{pix_fmt}.png", fr[0])
 
 dataset = VideoDataset(reader)
 for _ in range(3):
