@@ -43,9 +43,9 @@ class VimeoZipReader(VideoReader):
             for path in paths
         ]
 
-    def list_videos(self) -> [[str]]:
+    def list_videos(self,frame_pad=None) -> [[str]]:
         paths = []
         root = "vimeo_septuplet/sequences/"
         for include in self.include_list:
             paths.extend([p.replace(root, '') for p in self.reader.list_images(root + include)])
-        return parse_video_list_from_image_list(paths)
+        return parse_video_list_from_image_list(paths,frame_pad)
