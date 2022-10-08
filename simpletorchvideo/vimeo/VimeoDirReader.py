@@ -29,4 +29,7 @@ class VimeoDirReader(VideoReader):
         return [self.reader.read_image(path) for path in paths]
 
     def list_videos(self) -> [[str]]:
-        return parse_video_list_from_image_list(self.reader.list_images())
+        paths = []
+        for include in self.include_list:
+            paths.extend(self.reader.list_images(include))
+        return parse_video_list_from_image_list(paths)

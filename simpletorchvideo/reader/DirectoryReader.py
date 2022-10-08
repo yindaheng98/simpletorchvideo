@@ -38,7 +38,7 @@ class DirectoryImageReader:
             for file in files:
                 abspath = os.path.join(top, file)
                 # if filetype.is_image(abspath): # should check, but cost too much time
-                images.append(os.path.relpath(abspath, root))
+                images.append(os.path.relpath(abspath, self.root))
         return images
 
     def is_dir(self, path: str):
